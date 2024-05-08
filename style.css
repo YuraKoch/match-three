@@ -1,0 +1,100 @@
+* {
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  overflow: hidden;
+  background-color: #353535;
+}
+
+.score {
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 48px;
+  color: #FFFFE0;
+}
+
+.wrapper {
+  position: relative;
+  width: 90vmin;
+  height: 90vmin;
+  max-width: 500px;
+  max-height: 500px;
+}
+
+.tile {
+  --size: 12.5%;
+  --row: 0;
+  --column: 0;
+  position: absolute;
+  box-sizing: border-box;
+  width: var(--size);
+  height: var(--size);
+  top: calc(var(--row) * (var(--size)));
+  left: calc(var(--column) * (var(--size)));
+  cursor: pointer;
+  border: 3px solid #353535;
+  border-radius: 50%;
+  transition-property: top, left;
+  transition-duration: 140ms;
+  animation: show 50ms;
+}
+
+@keyframes show {
+  0% {
+    opacity: 0.5;
+  }
+}
+
+.tile.selected {
+  border: 3px solid #FFFFE0;
+}
+
+.tile.hide {
+  opacity: 0;
+  animation: hide 200ms;
+}
+
+@keyframes hide {
+  0% {
+    opacity: 1;
+  }
+}
+
+.tile1 {
+  background-color: #FFE4B2;
+}
+
+.tile2 {
+  background-color: #FFA07A;
+}
+
+.tile3 {
+  background-color: #98FB98;
+}
+
+.tile4 {
+  background-color: #7EC8E3;
+}
+
+.tile5 {
+  background-color: #4D6FAC;
+}
+
+.tile6 {
+  background-color: #9370DB;
+}
+
+.tile7 {
+  background-color: #FFB6C1;
+}
