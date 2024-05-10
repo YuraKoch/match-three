@@ -11,12 +11,12 @@ export class Game {
 
   init() {
     this.score = 0;
-    this.grid = Array(this.rowsCount).fill().map(() => new Array(this.columnsCount).fill(null));
+    this.matrix = Array(this.rowsCount).fill().map(() => new Array(this.columnsCount).fill(null));
 
     for (let row = 0; row < this.rowsCount; row++) {
       for (let column = 0; column < this.columnsCount; column++) {
         do {
-          this.grid[row][column] = this.getRandomValue();
+          this.matrix[row][column] = this.getRandomValue();
         } while (this.isRow(row, column));
       }
     }
@@ -31,17 +31,17 @@ export class Game {
   }
 
   isVerticalRow(row, column) {
-    const value = Math.abs(this.grid[row][column]);
+    const value = Math.abs(this.matrix[row][column]);
     let elementsInRow = 1;
 
     let currentRow = row - 1;
-    while (currentRow >= 0 && Math.abs(this.grid[currentRow][column]) == value) {
+    while (currentRow >= 0 && Math.abs(this.matrix[currentRow][column]) == value) {
       elementsInRow++;
       currentRow--;
     }
 
     currentRow = row + 1;
-    while (currentRow <= this.rowsCount - 1 && Math.abs(this.grid[currentRow][column]) == value) {
+    while (currentRow <= this.rowsCount - 1 && Math.abs(this.matrix[currentRow][column]) == value) {
       elementsInRow++;
       currentRow++;
     }
@@ -50,17 +50,17 @@ export class Game {
   }
 
   isHorizontalRow(row, column) {
-    const value = Math.abs(this.grid[row][column]);
+    const value = Math.abs(this.matrix[row][column]);
     let elementsInRow = 1;
 
     let currentColumn = column - 1;
-    while (currentColumn >= 0 && Math.abs(this.grid[row][currentColumn]) == value) {
+    while (currentColumn >= 0 && Math.abs(this.matrix[row][currentColumn]) == value) {
       elementsInRow++;
       currentColumn--;
     }
 
     currentColumn = column + 1;
-    while (currentColumn <= this.columnsCount - 1 && Math.abs(this.grid[row][currentColumn]) == value) {
+    while (currentColumn <= this.columnsCount - 1 && Math.abs(this.matrix[row][currentColumn]) == value) {
       elementsInRow++;
       currentColumn++;
     }
@@ -68,13 +68,7 @@ export class Game {
     return elementsInRow >= 3;
   }
 
-  isNeighbours(firstElement, secondElement) {
-    const isColumnNeighbours = firstElement.column == secondElement.column && Math.abs(firstElement.row - secondElement.row) === 1;
-    const isRowNeighbours = firstElement.row == secondElement.row && Math.abs(firstElement.column - secondElement.column) === 1;
-    return isColumnNeighbours || isRowNeighbours;
-  }
-
-  swapElements(firstElement, secondElement) {
+  swap(firstElement, secondElement) {
     this.swapElementsInGrid(firstElement, secondElement);
     const isRowWithFisrtElement = this.isRow(firstElement.row, firstElement.column);
     const isRowWithSecondElement = this.isRow(secondElement.row, secondElement.column);
@@ -89,11 +83,11 @@ export class Game {
     this.markElementsToRemoveFor(secondElement.row, secondElement.column);
     this.removeMarkedElements();
     this.score += this.calculateRemovedElements();
-    gridStates.push(deepClone(this.grid));
+    gridStates.push(deepClone(this.matrix));
 
     this.dropElements();
     this.fillBlanks();
-    gridStates.push(deepClone(this.grid));
+    gridStates.push(deepClone(this.matrix));
 
     let removedElements = 0;
     do {
@@ -107,10 +101,10 @@ export class Game {
       this.score += removedElements;
 
       if (removedElements > 0) {
-        gridStates.push(deepClone(this.grid));
+        gridStates.push(deepClone(this.matrix));
         this.dropElements();
         this.fillBlanks();
-        gridStates.push(deepClone(this.grid));
+        gridStates.push(deepClone(this.matrix));
       }
     } while (removedElements > 0)
 
@@ -118,13 +112,13 @@ export class Game {
   }
 
   swapElementsInGrid(firstElement, secondElement) {
-    const temp = this.grid[firstElement.row][firstElement.column];
-    this.grid[firstElement.row][firstElement.column] = this.grid[secondElement.row][secondElement.column];
-    this.grid[secondElement.row][secondElement.column] = temp;
+    const temp = this.matrix[firstElement.row][firstElement.column];
+    this.matrix[firstElement.row][firstElement.column] = this.matrix[secondElement.row][secondElement.column];
+    this.matrix[secondElement.row][secondElement.column] = temp;
   }
 
   markElementsToRemoveFor(row, column) {
-    const value = this.grid[row][column];
+    const value = this.matrix[row][column];
     if (this.isVerticalRow(row, column)) {
       this.markVerticalElementsToRemove(row, column, value);
     }
@@ -134,33 +128,33 @@ export class Game {
   }
 
   markVerticalElementsToRemove(row, column, value) {
-    this.grid[row][column] = -1 * Math.abs(this.grid[row][column]);
+    this.matrix[row][column] = -1 * Math.abs(this.matrix[row][column]);
 
     let currentRow = row - 1;
-    while (currentRow >= 0 && this.grid[currentRow][column] == value) {
-      this.grid[currentRow][column] = -1 * Math.abs(this.grid[currentRow][column]);
+    while (currentRow >= 0 && this.matrix[currentRow][column] == value) {
+      this.matrix[currentRow][column] = -1 * Math.abs(this.matrix[currentRow][column]);
       currentRow--;
     }
 
     currentRow = row + 1;
-    while (currentRow <= this.rowsCount - 1 && this.grid[currentRow][column] == value) {
-      this.grid[currentRow][column] = -1 * Math.abs(this.grid[currentRow][column]);
+    while (currentRow <= this.rowsCount - 1 && this.matrix[currentRow][column] == value) {
+      this.matrix[currentRow][column] = -1 * Math.abs(this.matrix[currentRow][column]);
       currentRow++;
     }
   }
 
   markHorizontalElementsToRemove(row, column, value) {
-    this.grid[row][column] = -1 * Math.abs(this.grid[row][column]);
+    this.matrix[row][column] = -1 * Math.abs(this.matrix[row][column]);
 
     let currentColumn = column - 1;
-    while (currentColumn >= 0 && this.grid[row][currentColumn] == value) {
-      this.grid[row][currentColumn] = -1 * Math.abs(this.grid[row][currentColumn]);
+    while (currentColumn >= 0 && this.matrix[row][currentColumn] == value) {
+      this.matrix[row][currentColumn] = -1 * Math.abs(this.matrix[row][currentColumn]);
       currentColumn--;
     }
 
     currentColumn = column + 1;
-    while (currentColumn <= this.columnsCount - 1 && this.grid[row][currentColumn] == value) {
-      this.grid[row][currentColumn] = -1 * Math.abs(this.grid[row][currentColumn]);
+    while (currentColumn <= this.columnsCount - 1 && this.matrix[row][currentColumn] == value) {
+      this.matrix[row][currentColumn] = -1 * Math.abs(this.matrix[row][currentColumn]);
       currentColumn++;
     }
   }
@@ -168,7 +162,7 @@ export class Game {
   removeMarkedElements() {
     for (let row = 0; row < this.rowsCount; row++) {
       for (let column = 0; column < this.columnsCount; column++) {
-        if (this.grid[row][column] < 0) this.grid[row][column] = null;
+        if (this.matrix[row][column] < 0) this.matrix[row][column] = null;
       }
     }
   }
@@ -177,7 +171,7 @@ export class Game {
     let count = 0;
     for (let row = 0; row < this.rowsCount; row++) {
       for (let column = 0; column < this.columnsCount; column++) {
-        if (this.grid[row][column] === null) count++;
+        if (this.matrix[row][column] === null) count++;
       }
     }
     return count;
@@ -193,7 +187,7 @@ export class Game {
     let emptyIndex;
 
     for (let row = this.rowsCount - 1; row >= 0; row--) {
-      if (this.grid[row][column] === null) {
+      if (this.matrix[row][column] === null) {
         emptyIndex = row;
         break;
       }
@@ -202,9 +196,9 @@ export class Game {
     if (emptyIndex === undefined) return;
 
     for (let row = emptyIndex - 1; row >= 0; row--) {
-      if (this.grid[row][column] !== null) {
-        this.grid[emptyIndex][column] = this.grid[row][column];
-        this.grid[row][column] = null;
+      if (this.matrix[row][column] !== null) {
+        this.matrix[emptyIndex][column] = this.matrix[row][column];
+        this.matrix[row][column] = null;
         emptyIndex--;
       }
     }
@@ -213,7 +207,7 @@ export class Game {
   fillBlanks() {
     for (let row = 0; row < this.rowsCount; row++) {
       for (let column = 0; column < this.columnsCount; column++) {
-        if (this.grid[row][column] === null) this.grid[row][column] = this.getRandomValue();
+        if (this.matrix[row][column] === null) this.matrix[row][column] = this.getRandomValue();
       }
     }
   }
