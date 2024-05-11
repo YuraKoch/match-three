@@ -31,17 +31,17 @@ export class Game {
   }
 
   isVerticalRow(row, column) {
-    const value = Math.abs(this.matrix[row][column]);
+    const absValue = Math.abs(this.matrix[row][column]);
     let elementsInRow = 1;
 
     let currentRow = row - 1;
-    while (currentRow >= 0 && Math.abs(this.matrix[currentRow][column]) == value) {
+    while (currentRow >= 0 && Math.abs(this.matrix[currentRow][column]) === absValue) {
       elementsInRow++;
       currentRow--;
     }
 
     currentRow = row + 1;
-    while (currentRow <= this.rowsCount - 1 && Math.abs(this.matrix[currentRow][column]) == value) {
+    while (currentRow <= this.rowsCount - 1 && Math.abs(this.matrix[currentRow][column]) === absValue) {
       elementsInRow++;
       currentRow++;
     }
@@ -50,17 +50,17 @@ export class Game {
   }
 
   isHorizontalRow(row, column) {
-    const value = Math.abs(this.matrix[row][column]);
+    const absValue = Math.abs(this.matrix[row][column]);
     let elementsInRow = 1;
 
     let currentColumn = column - 1;
-    while (currentColumn >= 0 && Math.abs(this.matrix[row][currentColumn]) == value) {
+    while (currentColumn >= 0 && Math.abs(this.matrix[row][currentColumn]) === absValue) {
       elementsInRow++;
       currentColumn--;
     }
 
     currentColumn = column + 1;
-    while (currentColumn <= this.columnsCount - 1 && Math.abs(this.matrix[row][currentColumn]) == value) {
+    while (currentColumn <= this.columnsCount - 1 && Math.abs(this.matrix[row][currentColumn]) === absValue) {
       elementsInRow++;
       currentColumn++;
     }
@@ -69,52 +69,45 @@ export class Game {
   }
 
   swap(firstElement, secondElement) {
-    this.swapElementsInGrid(firstElement, secondElement);
+    this.swap2Elements(firstElement, secondElement);
     const isRowWithFisrtElement = this.isRow(firstElement.row, firstElement.column);
     const isRowWithSecondElement = this.isRow(secondElement.row, secondElement.column);
     if (!isRowWithFisrtElement && !isRowWithSecondElement) {
-      this.swapElementsInGrid(firstElement, secondElement);
+      this.swap2Elements(firstElement, secondElement);
       return null;
     }
 
-    const gridStates = [];
-
-    this.markElementsToRemoveFor(firstElement.row, firstElement.column);
-    this.markElementsToRemoveFor(secondElement.row, secondElement.column);
-    this.removeMarkedElements();
-    this.score += this.calculateRemovedElements();
-    gridStates.push(deepClone(this.matrix));
-
-    this.dropElements();
-    this.fillBlanks();
-    gridStates.push(deepClone(this.matrix));
-
+    const swapStates = [];
     let removedElements = 0;
     do {
-      for (let row = 0; row < this.rowsCount; row++) {
-        for (let column = 0; column < this.columnsCount; column++) {
-          this.markElementsToRemoveFor(row, column);
-        }
-      }
-      this.removeMarkedElements();
-      removedElements = this.calculateRemovedElements();
-      this.score += removedElements;
+      removedElements = this.removeAllRows();
 
       if (removedElements > 0) {
-        gridStates.push(deepClone(this.matrix));
+        this.score += removedElements;
+        swapStates.push(deepClone(this.matrix));
         this.dropElements();
         this.fillBlanks();
-        gridStates.push(deepClone(this.matrix));
+        swapStates.push(deepClone(this.matrix));
       }
     } while (removedElements > 0)
 
-    return gridStates;
+    return swapStates;
   }
 
-  swapElementsInGrid(firstElement, secondElement) {
+  swap2Elements(firstElement, secondElement) {
     const temp = this.matrix[firstElement.row][firstElement.column];
     this.matrix[firstElement.row][firstElement.column] = this.matrix[secondElement.row][secondElement.column];
     this.matrix[secondElement.row][secondElement.column] = temp;
+  }
+
+  removeAllRows() {
+    for (let row = 0; row < this.rowsCount; row++) {
+      for (let column = 0; column < this.columnsCount; column++) {
+        this.markElementsToRemoveFor(row, column);
+      }
+    }
+    this.removeMarkedElements();
+    return this.calculateRemovedElements();
   }
 
   markElementsToRemoveFor(row, column) {
@@ -128,32 +121,34 @@ export class Game {
   }
 
   markVerticalElementsToRemove(row, column, value) {
+    const absValue = Math.abs(value);
     this.matrix[row][column] = -1 * Math.abs(this.matrix[row][column]);
 
     let currentRow = row - 1;
-    while (currentRow >= 0 && this.matrix[currentRow][column] == value) {
+    while (currentRow >= 0 && Math.abs(this.matrix[currentRow][column]) === absValue) {
       this.matrix[currentRow][column] = -1 * Math.abs(this.matrix[currentRow][column]);
       currentRow--;
     }
 
     currentRow = row + 1;
-    while (currentRow <= this.rowsCount - 1 && this.matrix[currentRow][column] == value) {
+    while (currentRow <= this.rowsCount - 1 && Math.abs(this.matrix[currentRow][column]) === absValue) {
       this.matrix[currentRow][column] = -1 * Math.abs(this.matrix[currentRow][column]);
       currentRow++;
     }
   }
 
   markHorizontalElementsToRemove(row, column, value) {
+    const absValue = Math.abs(value);
     this.matrix[row][column] = -1 * Math.abs(this.matrix[row][column]);
 
     let currentColumn = column - 1;
-    while (currentColumn >= 0 && this.matrix[row][currentColumn] == value) {
+    while (currentColumn >= 0 && Math.abs(this.matrix[row][currentColumn]) === absValue) {
       this.matrix[row][currentColumn] = -1 * Math.abs(this.matrix[row][currentColumn]);
       currentColumn--;
     }
 
     currentColumn = column + 1;
-    while (currentColumn <= this.columnsCount - 1 && this.matrix[row][currentColumn] == value) {
+    while (currentColumn <= this.columnsCount - 1 && Math.abs(this.matrix[row][currentColumn]) === absValue) {
       this.matrix[row][currentColumn] = -1 * Math.abs(this.matrix[row][currentColumn]);
       currentColumn++;
     }

@@ -8,10 +8,10 @@ export class Grid {
 
   constructor(wrapper, matrix) {
     this.wrapper = wrapper;
-    this.addTiles(matrix);
+    this.createTiles(matrix);
   }
 
-  addTiles(matrix) {
+  createTiles(matrix) {
     for (let row = 0; row < matrix.length; row++) {
       for (let column = 0; column < matrix[0].length; column++) {
         this.createTile(row, column, matrix[row][column]);
@@ -73,7 +73,7 @@ export class Grid {
     return isColumnNeighbours || isRowNeighbours;
   }
 
-  async swap(firstTilePosition, secondTilePosition, swapResult) {
+  async swap(firstTilePosition, secondTilePosition, swapStates) {
     this.isGameBlocked = true;
 
     const firstTile = this.findTileBy(firstTilePosition.row, firstTilePosition.column);
@@ -83,7 +83,7 @@ export class Grid {
     const secondTileAnimation = this.moveTileTo(secondTile, firstTilePosition);
     await Promise.all([firstTileAnimation, secondTileAnimation]);
 
-    if (!swapResult) {
+    if (!swapStates) {
       const firstTileAnimation = this.moveTileTo(firstTile, firstTilePosition);
       const secondTileAnimation = this.moveTileTo(secondTile, secondTilePosition);
       await Promise.all([firstTileAnimation, secondTileAnimation]);
@@ -91,9 +91,9 @@ export class Grid {
       return;
     }
 
-    for (let i = 0; i < swapResult.length; i += 2) {
-      await this.removeTiles(swapResult[i]);
-      await this.dropTiles(swapResult[i], swapResult[i + 1]);
+    for (let i = 0; i < swapStates.length; i += 2) {
+      await this.removeTiles(swapStates[i]);
+      await this.dropTiles(swapStates[i], swapStates[i + 1]);
       await delay(100);
     }
 

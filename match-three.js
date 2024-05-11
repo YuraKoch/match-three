@@ -15,8 +15,8 @@ export class MatchThree {
   }
 
   async swap(firstElementPosition, secondElementPosition) {
-    const swapResult = this.game.swap(firstElementPosition, secondElementPosition);
-    await this.grid.swap(firstElementPosition, secondElementPosition, swapResult);
+    const swapStates = this.game.swap(firstElementPosition, secondElementPosition);
+    await this.grid.swap(firstElementPosition, secondElementPosition, swapStates);
     this.updateScore();
   }
 
