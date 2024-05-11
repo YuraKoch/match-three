@@ -6,8 +6,8 @@ export class Grid {
   selectedTile = null;
   isGameBlocked = false;
 
-  constructor(wrapper, matrix) {
-    this.wrapper = wrapper;
+  constructor(wrap, matrix) {
+    this.wrap = wrap;
     this.createTiles(matrix);
   }
 
@@ -20,7 +20,7 @@ export class Grid {
   }
 
   async createTile(row, column, value) {
-    const tile = new Tile(this.wrapper, row, column, value, this.handleTileClick);
+    const tile = new Tile(this.wrap, row, column, value, this.handleTileClick);
     this.tiles.push(tile);
     await tile.waitForAnimationEnd();
   }
@@ -50,7 +50,7 @@ export class Grid {
       }
     });
 
-    this.wrapper.dispatchEvent(event);
+    this.wrap.dispatchEvent(event);
   }
 
   selectTile(row, column) {

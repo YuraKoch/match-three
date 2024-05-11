@@ -1,11 +1,11 @@
 export class Tile {
-  constructor(wrapper, row, column, value, handleTileClick) {
+  constructor(wrap, row, column, value, handleTileClick) {
     this.handleTileClick = handleTileClick;
     this.tileElement = document.createElement("div");
     this.tileElement.classList.add("tile");
     this.tileElement.classList.add(`tile${value}`);
     this.setPositionBy(row, column);
-    wrapper.append(this.tileElement);
+    wrap.append(this.tileElement);
     this.tileElement.addEventListener("click", this.clickHandler);
   }
 

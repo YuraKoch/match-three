@@ -2,12 +2,12 @@ import { Game } from "./game.js";
 import { Grid } from "./grid.js";
 
 export class MatchThree {
-  wrapper = document.querySelector(".wrapper");
+  wrap = document.querySelector(".wrap");
 
   constructor(rowsCount, columnsCount, tilesCount) {
     this.game = new Game(rowsCount, columnsCount, tilesCount);
-    this.grid = new Grid(this.wrapper, this.game.matrix);
-    this.wrapper.addEventListener("swap", (event) => {
+    this.grid = new Grid(this.wrap, this.game.matrix);
+    this.wrap.addEventListener("swap", (event) => {
       const firstElementPosition = event.detail.firstElementPosition;
       const secondElementPosition = event.detail.secondElementPosition;
       this.swap(firstElementPosition, secondElementPosition);
