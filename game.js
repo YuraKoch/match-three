@@ -103,54 +103,16 @@ export class Game {
   removeAllRows() {
     for (let row = 0; row < this.rowsCount; row++) {
       for (let column = 0; column < this.columnsCount; column++) {
-        this.markElementsToRemoveFor(row, column);
+        this.markElementToRemoveFor(row, column);
       }
     }
     this.removeMarkedElements();
     return this.calculateRemovedElements();
   }
 
-  markElementsToRemoveFor(row, column) {
-    const value = this.matrix[row][column];
-    if (this.isVerticalRow(row, column)) {
-      this.markVerticalElementsToRemove(row, column, value);
-    }
-    if (this.isHorizontalRow(row, column)) {
-      this.markHorizontalElementsToRemove(row, column, value);
-    }
-  }
-
-  markVerticalElementsToRemove(row, column, value) {
-    const absValue = Math.abs(value);
-    this.matrix[row][column] = -1 * Math.abs(this.matrix[row][column]);
-
-    let currentRow = row - 1;
-    while (currentRow >= 0 && Math.abs(this.matrix[currentRow][column]) === absValue) {
-      this.matrix[currentRow][column] = -1 * Math.abs(this.matrix[currentRow][column]);
-      currentRow--;
-    }
-
-    currentRow = row + 1;
-    while (currentRow <= this.rowsCount - 1 && Math.abs(this.matrix[currentRow][column]) === absValue) {
-      this.matrix[currentRow][column] = -1 * Math.abs(this.matrix[currentRow][column]);
-      currentRow++;
-    }
-  }
-
-  markHorizontalElementsToRemove(row, column, value) {
-    const absValue = Math.abs(value);
-    this.matrix[row][column] = -1 * Math.abs(this.matrix[row][column]);
-
-    let currentColumn = column - 1;
-    while (currentColumn >= 0 && Math.abs(this.matrix[row][currentColumn]) === absValue) {
-      this.matrix[row][currentColumn] = -1 * Math.abs(this.matrix[row][currentColumn]);
-      currentColumn--;
-    }
-
-    currentColumn = column + 1;
-    while (currentColumn <= this.columnsCount - 1 && Math.abs(this.matrix[row][currentColumn]) === absValue) {
-      this.matrix[row][currentColumn] = -1 * Math.abs(this.matrix[row][currentColumn]);
-      currentColumn++;
+  markElementToRemoveFor(row, column) {
+    if (this.isRow(row, column)) {
+      this.matrix[row][column] = -1 * Math.abs(this.matrix[row][column]);
     }
   }
 
